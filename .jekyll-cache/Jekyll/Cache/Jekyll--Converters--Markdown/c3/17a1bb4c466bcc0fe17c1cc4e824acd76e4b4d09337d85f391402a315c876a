@@ -1,0 +1,129 @@
+I"�<h2 id="contenido">Contenido</h2>
+
+<ol>
+  <li><a href="#download">Descarga y extrae los archivos.</a></li>
+  <li><a href="#options_file">Archivos de opciones</a></li>
+  <li><a href="#first_connect">Primera conexión</a></li>
+  <li><a href="#change_password">Establecer contraseña</a></li>
+  <li><a href="#install_as_service">Configurar MySQL como un servicio</a></li>
+</ol>
+
+<h3 id="download">Descarga de los archivos</h3>
+
+<p>Descargamos el archivo zip ▶ <a href="https://dev.mysql.com/downloads/file/?id=509736" target="_blank">aquí</a></p>
+
+<blockquote>
+  <p>Ya esta seleccionado el archivo.</p>
+</blockquote>
+
+<p><img src="/img/posts/mysql-install/01.png" alt="image 01" /></p>
+
+<blockquote>
+  <p>Solo damos clic en donde está señalado en la siguiente ilustración y comenzará la descarga.</p>
+</blockquote>
+
+<p><img src="/img/posts/mysql-install/02.png" alt="image 02" /></p>
+
+<p>Extraemos el contenido del archivo zip en el directorio deseado.</p>
+
+<blockquote>
+  <p>En esta guía lo vamos a descomprimir en la raíz del disco C y todos los archivos estarán dentro de la carpeta que nombraremos MySQL8</p>
+</blockquote>
+
+<p><img src="/img/posts/mysql-install/03.png" alt="image 03" /></p>
+
+<p><a href="#contenido"><img src="https://img.shields.io/badge/regresar%20contenido%20principal-%E2%86%A9-blue?style=for-the-badge&amp;logo=readthedocs&amp;logoColor=%23FAC173" alt="back" /></a></p>
+
+<h3 id="options_file">Archivo de opciones</h3>
+
+<p>Para especificarle opciones al servidor durante su inicio podemos hacerlo desde la línea de comandos pasandole como argumento las diferentes opciones que puedes encontrar en la <a href="https://dev.mysql.com/doc/refman/8.0/en/server-options.html">documentación oficial</a> o bien colocando las opciones en un <strong>archivo de opciones</strong> (lo recomendado). Aquellas opciones se usarán cada vez que se inicie el servidor, esto es especialmente necesario en las siguiente circuntancias:</p>
+
+<ul>
+  <li>El directorio de instalación y de datos son diferentes a los predeterminado.</li>
+  <li>Es necesario afinar la configuración del servidor.</li>
+</ul>
+
+<p>Un archivo de opciones se utiliza para que MySQL lea los parámetros declarados dentro del archivo de opciones y pueda iniciar el servidor de base de datos con las configuraciones que deseamos.</p>
+
+<p>El archivo dentro tiene una sección exclusiva para el las opciones del servidor <strong>[mysqld]</strong> donde podremos definir la siguiente párametros que nos interesa:</p>
+
+<ul>
+  <li>
+    <p><strong>basedir</strong>: el directorio base de instalación. (En nuestro caso el directorio base de ejemplo es  <strong>C:\MySQL8</strong>)</p>
+  </li>
+  <li>
+    <p><strong>datadir</strong>: la ubicación del directorio de datos. (Este se crea por defecto dentro del directorio base de instalación cuando inicializamos por primera vez el servidor, por ende es importante crear un archivo de opciones previamente para establecer donde queremos que se cree este directorio de datos).</p>
+  </li>
+</ul>
+
+<h3 id="-crear-un-nuevo-archivo-de-opciones">📃 Crear un nuevo archivo de opciones</h3>
+
+<p>Creaamos un nuevo archivo dentro del directorio base de la instalación y lo vamos a nombrar <strong>my.ini</strong></p>
+
+<p><img src="/img/posts/mysql-install/04.png" alt="image 04" /></p>
+
+<p>Este archivo puede modificarse con cualquier editor de texto, como el bloc de notas.</p>
+
+<p><img src="/img/posts/mysql-install/05.png" alt="image 05" /></p>
+
+<p>En la sección <strong>[mysqld]</strong> asignaremos los valores que tendrán los parámetros <code class="language-plaintext highlighter-rouge">basedir</code> y <code class="language-plaintext highlighter-rouge">datadir</code> que serán las rutas de destino en nuestro sistema.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[mysqld]
+basedir=&lt;PATH&gt;
+datadir=&lt;PATH&gt;
+</code></pre></div></div>
+
+<p><img src="/img/posts/mysql-install/06.png" alt="image 06" /></p>
+
+<blockquote>
+  <p>Si quieres ver más sobre las opciones para [mysqld] ve a la <a href="https://dev.mysql.com/doc/refman/8.0/en/option-files.html" target="_blank">documentación oficial</a></p>
+</blockquote>
+
+<p><strong>Aquí están algunas opciones que tengo definidas en el archivo:</strong></p>
+
+<pre><code class="language-mysql.ini">[client]
+port=3306
+socket=/temp/mysql.shock
+
+[mysqld]
+basedir=C:/MySQL8
+datadir=C:/data
+port=3306
+socket=/temp/mysql.shock
+key_buffer_size=16M
+max_allowed_packet=8M
+
+[mysqldump]
+quick
+</code></pre>
+
+<blockquote>
+  <p>Sin embargo no es relevante, porque lo importante son <strong>datadir</strong> y <strong>basedir</strong>, el puerto y las demás opciones vienen por defecto.<br />
+Si la carpeta que hemos definidos para los datos no existe, la creará por nosotros, pero si debe existir el destino de ruta que hemos indicado.</p>
+</blockquote>
+
+<p>Hecho lo anterior para inicializar una instalación de MySQL, en caso de que no hayamos creando el archivo de opciones, se creara un directorio <strong>data</strong> dentro del directorio de instalación y dentro de ese directorio se crearan las bases de datos del sistema llenando las tablas del sistema mysql.</p>
+
+<p>Para iniciar la instalación de MySQL nos situamos dentro del directorio raíz y abrimos una consola:</p>
+
+<pre><code class="language-mysql">mysqld --initialize o --initialize-insecure.
+</code></pre>
+
+<p><strong>Este comando hace lo siguiente:</strong></p>
+
+<ul>
+  <li>Incializa el directorio de datos de MySQL y crea las tablas del sistema.</li>
+  <li>Instala el esquema <a href="https://dev.mysql.com/doc/refman/8.0/en/sys-schema.html">sys</a></li>
+  <li>Crea una cuenta administrativa. Las versiones anteriores de <strong>mysql_install_db</strong> pueden crear cuentas de usuario anónimas.</li>
+</ul>
+
+<p><strong>Implementación segura por defecto</strong></p>
+
+<ul>
+  <li>Se crea una sola cuenta administrativa <strong>‘root’@’localhost’</strong> con una contraseña generada aleatoriamente, que se marca como caducada.</li>
+  <li>No se crean cuentas de usuario anónimo.</li>
+  <li>No se crea ninguna base de datos como <strong>test</strong> accesible para todos los usuarios.</li>
+  <li>La opción <strong>–random-password-file</strong> está disponible para controlar dónde se escribe la contraseña aleatoria.</li>
+</ul>
+
+:ET
