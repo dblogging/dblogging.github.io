@@ -1,0 +1,21 @@
+I"�<p><a name="top"></a></p>
+
+<h2 id="contenido">Contenido</h2>
+
+<p><a href="#install">Descarga y extrae los archivos.</a>
+<a href="#options_file">Archivos de opciones</a>
+<a href="#first_connect">Primera conexión</a>
+<a href="#change_password">Establecer contraseña</a>
+<a href="#install_as_service">Configurar MySQL como un servicio</a></p>
+
+<h3 id="descarga-de-los-archivos"><a name="install"></a>Descarga de los archivos</h3>
+
+<p>Descargamos el archivo zip ▶ <a href="https://dev.mysql.com/downloads/file/?id=509736">aquí</a></p>
+
+<p>Ya esta seleccionado el archivo, solo damos clic en donde está señalado en la siguiente ilustración y comenzará la descarga.</p>
+
+<h4 id="extraemos-el-contenido-del-archivo-zip-en-el-directorio-deseado">Extraemos el contenido del archivo zip en el directorio deseado.</h4>
+<p>En mi caso lo voy a descomprimir en la siguiente ubicación “C:\MySQL8”</p>
+
+<p><img src="/img/posts/mysql-install/01.png" alt="image 01" /></p>
+:ET
