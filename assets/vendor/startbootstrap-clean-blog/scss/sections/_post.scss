@@ -63,6 +63,22 @@ img[alt=back] {
     box-shadow: none;
 }
 
+.btn {
+    display: block;
+    margin: auto;
+    border-radius: 2px;
+    box-shadow: 0 3px #25406b;
+    transition:
+        background 0.25s,
+        transform 0.25s,
+        box-shadow 0.25s;
+}
+
+.btn:active {
+    transform: translateY(7px);
+    box-shadow: 0 1px #25406b
+}
+
 img[alt=BuyMeACoffee] {
     width: 65%;
     display: block;
