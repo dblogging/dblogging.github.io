@@ -1,6 +1,6 @@
 title:              Dblogging
 email:              enidev911@gmail.com
-description:        Un Blog sobre temas de bases de datos y programación
+description:        Un Blog sobre temas de bases de datos y programación <span>Por EniDev911</span>
 author:             Enidev911
 baseurl:            ""
 url:                "https://dblogging.github.io"

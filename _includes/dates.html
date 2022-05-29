@@ -1,0 +1,10 @@
+{% capture fecha_page %}
+{% assign m = page.date | date: "%-m" | minus: 1 %}
+{{ site.data.es.months[m] }} de
+{{ page.date | date: "%Y" }}
+{% endcapture %}
+{% capture fecha_post %}
+{% assign m = post.date | date: "%-m" | minus: 1 %}
+{{ site.data.es.months[m] }} de
+{{ post.date | date: "%Y" }}
+{% endcapture %}

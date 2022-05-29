@@ -1,0 +1,166 @@
+I"f1<p><img src="https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&amp;logo=ubuntu&amp;logoColor=white" alt="Ubuntu" height="80" /></p>
+
+<ul>
+  <li><strong>Actualizar el índice de paquetes apt con el siguiente comando:</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt update
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Instalar el paquete de MySQL con el comando:</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt <span class="nb">install </span>mysql-server
+</code></pre></div>    </div>
+    <p><img src="/img/posts/install_in_ubuntu/01.png" alt="step1" /></p>
+  </li>
+  <li><strong>Concluida la instalación, el demonio de MySQL se iniciará automáticamente. Para verificar si esta ejecutandose el servidor usamos el comando:</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>systemctl status mysql
+</code></pre></div>    </div>
+    <p><img src="../../../../assets/png/mysql/install/install_in_ubuntu/02.png" alt="step2" /></p>
+  </li>
+  <li><strong>Ver en que puerto está abierto</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cat</span> /etc/services | <span class="nb">grep </span>mysql
+</code></pre></div>    </div>
+    <p>En Debian y derivados, el paquete mysql-server incluye el script desarrollado en Perl <strong>mysql_secure_installation</strong>, el cual permite mejorar la seguridad de la instalación por defecto. Es recomendable correr este script en todas las instalaciones de servidores MySQL para sistemas en producción. En resumen nos permite:</p>
+    <ul>
+      <li>Cambiar la contraseña del usuario “<strong>root</strong>”.</li>
+      <li>Deshabilitar el acceso remoto para el usuario “<strong>root</strong>”.</li>
+      <li>Eliminar cuentas de usuario anónimas que pueden ingresar sin necesidad de una contraseña.</li>
+      <li>Eliminar la base de datos “<strong>test</strong>” (si existe), y todo privilegio que permita a cualquier usuario el acceso a bases de datos cuyos nombres comienzan con “<strong>test_</strong>”.</li>
+    </ul>
+  </li>
+  <li><strong>Utilizar el script para una configuración segura:</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>mysql_secure_installation
+</code></pre></div>    </div>
+    <p>La primera pregunta nos solicitará si queremos validar password para conectarnos al servidor sea seguro, si lo deseamos al momento de crear un nuevo usuario en el sistema MySQL nos validará si el password cumple con las condiciones mínimas de seguridad. Si no queremos esto solamente ingresamos <strong><code class="language-plaintext highlighter-rouge">N</code></strong>
+<img src="../../../../assets/png/mysql/install/install_in_ubuntu/03.png" alt="step3" />
+Luego de acuerdo a la opción que ingresemos nos solicitará ingresar el password para el usuario root (Ojo: esto no tendrá efecto hasta que cambiemos el método de autenticación al usuario root de <strong>auth_socket</strong> a  otro complemento). Una vez ingresamos nuestro password, nos preguntará si deseamos remover a los usuarios ánonimos que se crean por defecto junto a la instalación de MySQL, lo mejor es removerlos.<br />
+<img src="../../../../assets/png/mysql/install/install_in_ubuntu/04.png" alt="step4" />
+Normalmente, a root solo se le debe permitir conectarse desde ‘localhost’. Para así asegurar que no puedan adivinar la password de root desde la red. Así que deshabilitamos el logín remoto.<br />
+<img src="../../../../assets/png/mysql/install/install_in_ubuntu/05.png" alt="step5" />
+Luego nos preguntá si queremos eliminar la base de datos de prueba, esto es opcional. 
+<img src="../../../../assets/png/mysql/install/install_in_ubuntu/06.png" alt="step6" />
+Luego nos pregunta si queremos recargar la tabla de privilegios. Pondremos si (Y).<br />
+<img src="../../../../assets/png/mysql/install/install_in_ubuntu/07.png" alt="step7" /></p>
+  </li>
+</ul>
+
+<h2 align="center">
+  Ajustes de autenticación y privilegios de usuario
+</h2>
+
+<p><br /></p>
+
+<p>En los sistemas Ubuntu con MySQL 5.7 (y versiones posteriores), el usuario <strong>root</strong> de MySQL se configura para la autenticación usando el complemento <strong>auth_socket</strong> de manera predeterminada en lugar de una contraseña. Esto en muchos casos proporciona mayor seguridad y utilidad, pero también puede generar complicaciones cuando deba permitir que un programa externo (como phpMyAdmin) acceda al usuario.</p>
+
+<p>Para usar un password para conectar a MySQL como <strong>root</strong>, deberemos cambiar el método de autenticación de <strong>auth_socket</strong> a otro complemento, como <strong>caching_sha2_password</strong> o <strong>mysql_native_password</strong>. Para hacer esto, abra la consola de MySQL desde su terminal:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>mysql
+</code></pre></div></div>
+
+<p>Para ver el método de autenticación utilizado por las cuentas de usuarios de MySQL ejecutamos la siguiente sentencia dentro de la consola de MySQL:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SELECT user, authentication_string, plugin, host FROM mysql.user<span class="p">;</span>
+</code></pre></div></div>
+
+<p align="center">
+  <img src="../../../../assets/png/mysql/install/install_in_ubuntu/08.png" />
+</p>
+
+<p>Para cambiar el método de autenticación de <strong>root</strong> con una password, utilizaremos el comando <strong>ALTER USER</strong> para cambiar el complemento de autenticación. Lo podriamos hacer todo en una sola línea como lo siguiente:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">ALTER</span> <span class="k">USER</span> <span class="s1">'root'</span><span class="o">@</span><span class="s1">'localhost'</span> <span class="n">IDENTIFIED</span> <span class="k">WITH</span> <span class="n">caching_sha2_password</span> <span class="k">BY</span> <span class="s1">'password'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>O realizar el cambio en dos pasos:</p>
+
+<ol>
+  <li>Cambiamos solo el complemento.
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">ALTER</span> <span class="k">USER</span> <span class="s1">'root'</span><span class="o">@</span><span class="s1">'localhost'</span> <span class="n">IDENTIFIED</span> <span class="k">WITH</span> <span class="n">mysql_native_password</span><span class="p">;</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Cambiamos el password. (La función <strong><code class="language-plaintext highlighter-rouge">user()</code></strong> devuelve al usuario en sessión)
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">ALTER</span> <span class="k">USER</span> <span class="k">user</span><span class="p">()</span> <span class="n">IDENTIFIED</span> <span class="k">BY</span> <span class="s1">'Strong_Password;
+</span></code></pre></div>    </div>
+  </li>
+</ol>
+
+<p>Y por último recargamos la tabla de permisos:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">FLUSH</span> <span class="k">PRIVILEGES</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Otra opción recomendada es crear un nuevo usuario administrativo con todos los privilegios y acceso a todas las bases de datos:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">GRANT</span> <span class="k">ALL</span> <span class="k">PRIVILEGES</span> <span class="k">ON</span> <span class="o">*</span><span class="p">.</span><span class="o">*</span> <span class="k">TO</span> <span class="s1">'admin_user'</span><span class="o">@</span><span class="s1">'localhost'</span> <span class="n">IDENTIFIED</span> <span class="k">BY</span> <span class="s1">'very_strong_password'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Para desinstalar MySQL con:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-get remove <span class="nt">--purge</span> mysql-server mysql-client mysql-common
+</code></pre></div></div>
+
+<h2 id="cambiar-el-directorio-de-datos-de-mysql-en-ubuntu">Cambiar el directorio de datos de MySQL en Ubuntu</h2>
+
+<p>El lugar por defecto del directorio de datos suele ser: var/lib/mysql</p>
+
+<p>En una ocasión tuve la necesidad de cambiar el directorio por defecto en donde se guardan los archivos de bases de datos en MySQL, el cual están <strong>var/lib/mysql</strong>. Es muy puntual, pero es muy útil conocer éste dato.</p>
+
+<p>Para hacerlo, primero debemos detener el servidor.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>service mysql stop
+</code></pre></div></div>
+
+<p>Copiamos los archivos de las bases de datos a la nueva ubicación:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo cp</span> <span class="nt">-R</span> <span class="nt">-p</span> /var/lib/mysql /new/location/
+</code></pre></div></div>
+
+<blockquote>
+  <p>El <strong>-p</strong> es importante porque debemos llevarnos íntegramente la configuración de seguridad, propiedad, etc.</p>
+</blockquote>
+
+<p>Ahora entramos al archivo de configuración de MySQL.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>nano /etc/mysql/mysql.conf.d/mysqld.cnf
+</code></pre></div></div>
+
+<p>Buscamos dentro del archivo mysqld.cnf el parámetro datadir y lo cambiamos por la nueva ruta… así:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[mysqld]
+datadir = /new/location/mysql
+</code></pre></div></div>
+
+<p>Ahora, aquí viene el secreto… debemos cambiar el perfil de seguridad de MySQL mediante AppArmor, modificando la nueva ruta.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>nano /etc/apparmor.d/usr.sbin.mysqld
+</code></pre></div></div>
+
+<p>Buscamos los directorios /var/lib/mysql/ y solo hacemos la modificación de la ruta, respetando lo demás; yo generalmente lo pongo como comentario a las líneas originales y agrego las líneas que sean necesarias… quedaría algo así:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Allow data dir access
+#  /var/lib/mysql/ r,
+#  /var/lib/mysql/** rwk,
+  /nueva/ubicacion/mysql/ r,
+  /nueva/ubicacion/mysql/** rwk,
+</code></pre></div></div>
+
+<p>Ahora recargamos la configuración mediante el servicio AppArmor y luego reiniciamos el servicio MySQL.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>service apparmor reload
+<span class="nb">sudo </span>service mysql start
+</code></pre></div></div>
+
+<p align="center">
+Sigueme en:<br />
+<a href="https://www.facebook.com/profile.php?id=100009064421475"><img src="../../../../assets/ico/sm/facebook_circled.ico" width="40" /></a>
+<a href="https://github.com/EniDev911"><img src="../../../../assets/ico/sm/github.ico" width="40" /></a>
+<a href="https://twitter.com/MarcoContreraas"><img src="../../../../assets/ico/sm/twitter.ico" width="40" /></a><br />
+Comparte un capuccino en:<br />
+<a href="https://www.buymeacoffee.com/9111592"><br />
+<img src="../../../../assets/png/buymeacoffee.png" width="200" /></a>
+</p>
+
+<p><a href="../../../../README.md#mysql"><img src="https://img.shields.io/badge/regresar%20contenido%20principal-%E2%86%A9-blue?style=for-the-badge&amp;logo=files&amp;logoColor=%23FAC173" alt="" /></a>
+Si quieres apoyarme te agradecería un simple café 🍵</p>
+
+<p><a href="https://www.buymeacoffee.com/9111592"><img src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=for-the-badge&amp;logo=buy-me-a-coffee&amp;logoColor=black" alt="BuyMeACoffee" /></a></p>
+
+:ET

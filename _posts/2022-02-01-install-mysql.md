@@ -3,7 +3,8 @@ layout: post
 title: "MySQL - ZIP"
 subtitle : "Instalación y configuración"
 date: 2022-02-01 23:25:13 -0400
-background: "/img/posts/mysql-install/bg.png"
+background: "/img/posts/mysql-install/bg.jpg"
+categories: "sql"
 ---
 
 

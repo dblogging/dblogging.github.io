@@ -18,11 +18,15 @@ layout: default
             {% if page.subtitle %}
             <h2 class="subheading">{{ page.subtitle }}</h2>
             {% endif %}
+
             <span class="meta">Por
               <a href="#">{% if page.author %}{{ page.author }}{% else %}{{ site.author }}{% endif %}</a>
-              on {{ page.date | date: '%B %d, %Y' }} &middot; {% include read_time.html
+              en {{ page.date | date: '%B %d, %Y' }} &middot; {% include read_time.html
               content=page.content %}
             </span>
+            <hr>
+            <span>Categoria: <mark>{{ page.categories }}</mark></span>
+
           </div>
         </div>
       </div>
