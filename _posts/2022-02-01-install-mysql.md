@@ -17,8 +17,6 @@ categories: "sql"
 1. [Configurar MySQL como un servicio](#install_as_service)
 
 
-
-
 ### Descarga de los archivos {#download} 
 
 Descargamos el archivo zip &#x25b6; [aquí](https://dev.mysql.com/downloads/file/?id=509736){:target="_blank"}
