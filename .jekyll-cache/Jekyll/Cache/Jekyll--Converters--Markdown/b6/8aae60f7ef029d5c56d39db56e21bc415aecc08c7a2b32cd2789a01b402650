@@ -1,0 +1,137 @@
+I"�<p><img src="https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&amp;logo=postgresql&amp;logoColor=white" alt="Postgre" /></p>
+
+<h2 id="instalación-manual-en-windows">INSTALACIÓN MANUAL EN WINDOWS</h2>
+
+<hr />
+
+<h3 id="download">📥 Descarga de los archivos</h3>
+
+<p>Descargamos el archivo zip <a href="https://www.enterprisedb.com/download-postgresql-binaries" target="_blank">aquí</a></p>
+
+<p>Extraemos el contenido del archivo zip  (en este caso descomprimiré en la siguiente ubicación <strong>C:\pgsql_14</strong>)</p>
+
+<p><img src="/img/posts/postgre-install/extract_zip_01.png" alt="image" height="300px" /></p>
+
+<hr />
+
+<h3 id="create-folder">📁 crear una carpeta data</h3>
+
+<p>Crear una carpeta donde se almacenarán las bases de datos, configuraciones y usuarios de nuestro servidor (en mi caso lo voy a descomprimir en la siguiente ubicación “<strong>C:\pgsql_data</strong>)</p>
+
+<p><img src="/img/posts/postgre-install/extract_zip_02.png" alt="image" height="300px" /></p>
+
+<hr />
+
+<h3 id="settings">🛠 Configuración inicial</h3>
+
+<p>Configurar el usuario, la contraseña, encriptación, la codificación para la base de datos. Nos cambiamos al directorio bin (en nuestro caso es <strong>C:\pgsql_14\bin</strong>) y abrimos una consola para ejecutar el siguiente comando:</p>
+
+<pre><code class="language-cmd">initdb.exe -D C:\pgsql_data -U postgres -W -E UTF8 -A scram-sha-256
+</code></pre>
+<p><strong>Las opciones que estamos usando son:</strong></p>
+<ul>
+  <li><strong>-D</strong>: para especificar el directorio de almacenamiento del clúster de bases de datos en nuestro caso <strong>(C:\pgsql_data)</strong>.</li>
+  <li><strong>-U postgres</strong>: para crear al superusuario como <strong>postgres</strong>.</li>
+  <li><strong>-W</strong>: para que nos solicite la contraseña del superusuario.</li>
+  <li><strong>-E UTF8</strong>: crea la base de datos con codificación UTF-8</li>
+  <li><strong>-A scram-sha-256</strong>: habilita la autenticación de contraseña.</li>
+</ul>
+
+<p><img src="/img/posts/postgre-install/init_db.png" alt="image" /></p>
+
+<hr />
+
+<h3 id="-iniciar-y-detener-el-servidor-postgre">🔃 Iniciar y detener el servidor Postgre</h3>
+
+<p>Para ver el estado del servidor y ver si es encuentra en ejecución o no:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pg_ctl.exe <span class="nt">-D</span> C:<span class="se">\p</span>gsql_data <span class="nt">-l</span> logfile status
+<span class="c"># Otra opción es la herramienta pg_isready</span>
+pg_isready.exe
+</code></pre></div></div>
+
+<p>Para iniciar el servidor ejecute el comando:</p>
+<pre><code class="language-cmd">pg_ctl.exe -D C:\pgsql_data -l logfile start
+</code></pre>
+
+<p>Para detener el servidor:</p>
+<pre><code class="language-cmd">pg_ctl.exe -D C:\pgsql_data stop
+</code></pre>
+
+<p>Para reiniciar el servidor:</p>
+<pre><code class="language-cmd">pg_ctl.exe -D C:\pgsql_data restart
+</code></pre>
+<blockquote>
+  <p>Nota: cualquier acción con el servidor es obligatorio indicar el directorio de datos</p>
+</blockquote>
+
+<hr />
+
+<h3 id="-registrar-como-servicio-de-windows">🚀 Registrar como servicio de Windows</h3>
+
+<p><strong>Abrimos una sesión como administrador</strong> y ejecutamos el comando:</p>
+
+<pre><code class="language-cmd">pg_ctl.exe register -D C:\pgsql_data -N "postgres14"
+</code></pre>
+
+<p><img src="/img/posts/postgre-install/register_as_service_01.png" alt="image" /></p>
+
+<p>Para ejecutar después el programa cliente <strong>psql</strong> desde cualquier ubicación establecemos esa variable entorno puede ser con CMD normal o como administrador:</p>
+
+<pre><code class="language-cmd">setx PATH "%path%;"C:\pgsql_14\bin\
+</code></pre>
+<p><img src="/img/posts/postgre-install/set_environ_variable.png" alt="image" /></p>
+
+<p>Para <strong>eliminar el servicio</strong> abrimos una <strong>sesión CMD como administrador</strong> y ejecutamos el comando:</p>
+
+<pre><code class="language-cmd">sc delete postgres14
+</code></pre>
+<hr />
+
+<h3 id="-iniciar-sesión-en-el-servidor-postgre">🖥 Iniciar sesión en el servidor Postgre</h3>
+
+<p>Usando el programa cliente <strong>psql.exe</strong> para conectarnos a nuestro servidor. Lo siguiente es llamar al programa e iniciar sesión indicando el usuario y luego nos pedirá el password.</p>
+
+<pre><code class="language-cmd">psql -U postgres
+</code></pre>
+
+<p>Cuando se le solicite la contraseña, ingrese la contraseña que estableció en la configuración inicial <a href="#settings">ver paso</a>.<br />
+El <strong>prompt</strong> nos indica que estamos conetado con éxito y listo para realizar sentencias SQL.</p>
+
+<p><img src="/img/posts/postgre-install/connection_01.png" alt="image" /></p>
+
+<hr />
+
+<h3 id="-operaciones-básicas-en-postgresql">🪛 Operaciones básicas en PostgreSQL</h3>
+
+<p>para listar los usuarios, use el comando <strong><em>\du</em></strong><br />
+para enumerar todas las bases de datos, use el comando <strong><em>\list</em></strong> o <strong><em>\l</em></strong><br />
+para salir solo escribimos <strong><em>exit</em></strong> o <strong><em>\q</em></strong></p>
+
+<p><img src="/img/posts/postgre-install/create_and_exit.png" alt="image" /></p>
+
+<p>para cambiar a una nueva base de datos, use el comando <strong><em>\connect &lt;database&gt;</em></strong> o <strong><em>\c &lt;database name&gt;</em></strong> <br />
+para mostrar tablas de una base de datos, use el comando <strong><em>\dt</em></strong> o <strong><em>\dt+</em></strong></p>
+
+<p><img src="/img/posts/postgre-install/create_and_list_table.png" alt="image" /></p>
+
+<p>para realizar una copia de seguridad o un volcado de la base de datos, use la herramienta pg_dump:</p>
+
+<pre><code class="language-cmd">pg_dump.exe -U postgres -d &lt;database name&gt; -f &lt;path&gt;\backup.sql
+</code></pre>
+<p><img src="/img/posts/postgre-install/pg_dump_bkp.png" alt="image" /></p>
+
+<p><img src="/img/posts/postgre-install/pg_dump_bkp2.png" alt="image" /></p>
+
+<p>para importar un archivo <strong>.pgsql</strong> o <strong>.sql</strong> existente al servidor de la base de datos, use el siguiente comando:</p>
+
+<pre><code class="language-cmd">psql.exe -h &lt;hostname&gt; -U postgres &lt; &lt;path&gt;\backup.sql
+</code></pre>
+<p><img src="/img/posts/postgre-install/pgsql_import_script.png" alt="image" /></p>
+
+<hr />
+
+<p>Si quieres apoyarme te agradecería un simple café 🍵</p>
+
+<p><a href="https://www.buymeacoffee.com/9111592"><img src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=for-the-badge&amp;logo=buy-me-a-coffee&amp;logoColor=black" alt="BuyMeACoffee" /></a></p>
+:ET

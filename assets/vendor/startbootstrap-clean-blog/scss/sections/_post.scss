@@ -52,8 +52,12 @@
 
 img {
     width: 100%;
-    // box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.4);
+
+    &[alt=image] {
+        box-shadow: 4px 6px 10px rgba(0, 0, 0, 0.4);
+    }
 }
+
 
 img[alt=back] {
     width: 45%;
