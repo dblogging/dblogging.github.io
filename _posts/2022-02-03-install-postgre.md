@@ -111,21 +111,26 @@ psql -U postgres
 
 ---
 
-### Operaciones básicas en PostgreSQL
+## Operaciones básicas en PostgreSQL
 
-- Para listar los usuarios, use el comando **`\du`**
-- Para enumerar todas las bases de datos, use el comando **`\list`** o **`\l`**. 
-- Para salir solo escribimos **`exit`** o **`\q`**.
+
+para listar los usuarios, use el comando **`\du`**  
+para enumerar todas las bases de datos, use el comando **`\list`** o **`\l`**  
+para salir solo escribimos **`exit`** o **`\q`**
 ![postgres_query](/img/posts/postgre-install/create_and_exit.png)
-- Para cambiar a una nueva base de datos, use el comando **`\connect <database>`** o **`\c <database name>`**. 
-- Para mostrar tablas de una base de datos, use el comando **`\dt`** o **`\dt+`**.
-![postgres_query2](/img/posts/postgre-install/create_and_list_table.png)
-- Para realizar una copia de seguridad o un volcado de la base de datos, use el comando:  
-    `pg_dump.exe -U postgres -d <database name> -f <path>\backup.sql`
+para cambiar a una nueva base de datos, use el comando **`\connect <database>`** o **`\c <database name>`**   
+para mostrar tablas de una base de datos, use el comando **`\dt`** o **`\dt+`**
+![postgres_query2](/img/posts/postgre-install/create_and_list_table.png)  
+para realizar una copia de seguridad o un volcado de la base de datos, use la herramienta pg_dump:  
+```cmd
+pg_dump.exe -U postgres -d <database name> -f <path>\backup.sql
+```
 ![postgres_bkp](/img/posts/postgre-install/pg_dump_bkp.png)
-![postgres_bkp](/img/posts/postgre-install/pg_dump_bkp2.png)
-- Para importar un archivo `.pgsql` o `.sql` existente al servidor de la base de datos, use el siguiente comando.  
-`psql.exe -h <hostname> -U postgres < <path>\backup.sql`
+![postgres_bkp](/img/posts/postgre-install/pg_dump_bkp2.png)  
+para importar un archivo `.pgsql` o `.sql` existente al servidor de la base de datos, use el siguiente comando:
+```cmd
+psql.exe -h <hostname> -U postgres < <path>\backup.sql
+```
 ![postgres_import](/img/posts/postgre-install/pgsql_import_script.png)
 
 ---

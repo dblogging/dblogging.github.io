@@ -8,8 +8,6 @@ categories: "sql"
 ---
 
 
-
-
 ## Contenido
 
 1. [Descarga y extrae los archivos.](#download)

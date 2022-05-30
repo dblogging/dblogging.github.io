@@ -7,7 +7,7 @@ background: "/img/posts/mysql-install/bg.jpg"
 categories: "sql"
 ---
 
-![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
+![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)git 
 
 
 **Actualizar el índice de paquetes apt con el siguiente comando:**
